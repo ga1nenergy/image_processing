@@ -1,0 +1,7 @@
+# Imgaes
+obr/
+
+# PyCharm stuff
+.idea/
+venv/
+__pycache__
