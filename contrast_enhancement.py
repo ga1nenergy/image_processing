@@ -24,3 +24,4 @@ def histogram_equalizer(channels):
 
 
 def non_linear_exponential_transform(channels):
+    pass
