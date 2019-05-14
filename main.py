@@ -21,6 +21,8 @@ def main():
     # debayered_image.show()
     image.save("debayer.png", "PNG")
 
+    # opencv_channels = utils.opencv_equalizer(channels)
+
     channels = median_filter(channels)
     name += "_median"
     image = utils.channels_to_image(channels)
@@ -43,7 +45,7 @@ def main():
     plt.bar(range(256), Image.fromarray(channels[1]).histogram())
     plt.show()
 
-    equalized_channels = histogram_equalizer(channels)
+    channels = histogram_equalizer(channels)
 
     # after equalizer
     plt.bar(range(256), Image.fromarray(channels[1]).histogram())
@@ -52,5 +54,6 @@ def main():
     name += "_equalizer"
     image = utils.channels_to_image(channels)
     image.show()
+    image.save(name+".png", "PNG")
 
 main()

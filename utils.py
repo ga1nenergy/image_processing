@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 from PIL import Image
 
-PROCESSING_TYPE = np.float16
+PROCESSING_TYPE = np.float32
 FINAL_TYPE = np.uint8
 
 
