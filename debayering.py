@@ -1,6 +1,6 @@
 import numpy as np
 import sys
-from utils import conv
+from utils import conv, PROCESSING_TYPE
 
 np.set_printoptions(threshold=sys.maxsize)
 
@@ -9,10 +9,10 @@ def debayer(image):
     [H_mask, W_mask] = image.shape
 
     if H % 2 != 0:
-        image = np.vstack((image, np.zeros((1, W_mask), dtype=int)))
+        image = np.vstack((image, np.zeros((1, W_mask), dtype=np.uint16)))
         H_mask = image.shape[0]
     if W % 2 != 0:
-        image = np.hstack((image, np.zeros((H_mask, 1), dtype=int)))
+        image = np.hstack((image, np.zeros((H_mask, 1), dtype=np.uint16)))
         W_mask = image.shape[1]
 
     mask_R_cell = np.matrix([[0xFFFF, 0], [0, 0]])
@@ -57,9 +57,9 @@ def debayer(image):
                                     [1, 0, 1],
                                     [0, 1, 0]])
 
-    R_layer_final = np.matrix(R_layer[1:-1-1, 1:-1-1])
-    G_layer_final = np.matrix(G_layer[1:-1-1, 1:-1-1])
-    B_layer_final = np.matrix(B_layer[1:-1-1, 1:-1-1])
+    R_layer_final = np.matrix(R_layer[1:-1-1, 1:-1-1].astype(PROCESSING_TYPE))
+    G_layer_final = np.matrix(G_layer[1:-1-1, 1:-1-1].astype(PROCESSING_TYPE))
+    B_layer_final = np.matrix(B_layer[1:-1-1, 1:-1-1].astype(PROCESSING_TYPE))
 
     for y in range(1, H-1):
         for x in range(1, W-1):
@@ -85,8 +85,8 @@ def debayer(image):
     # print(R_layer[50+1:50+1+10, 50+1:50+1+10])
     # print(R_layer_final[50+1:50+1+10, 50:50+10])
 
-    R_layer_final = np.matrix((255 * R_layer_final / 0xFFFF).astype(np.uint8))
-    G_layer_final = np.matrix((255 * G_layer_final / 0xFFFF).astype(np.uint8))
-    B_layer_final = np.matrix((255 * B_layer_final / 0xFFFF).astype(np.uint8))
+    R_layer_final = np.matrix((255.0 * R_layer_final / 0xFFFF))
+    G_layer_final = np.matrix((255.0 * G_layer_final / 0xFFFF))
+    B_layer_final = np.matrix((255.0 * B_layer_final / 0xFFFF))
 
     return [R_layer_final, G_layer_final, B_layer_final]

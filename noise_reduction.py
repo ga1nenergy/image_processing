@@ -7,11 +7,11 @@ def median_filter(channels):
     filtered_channels = []
 
     for channel in channels:
-        filtered_channel = np.zeros(channel.shape, dtype=np.uint8)
+        filtered_channel = np.zeros(channel.shape, dtype=np.float32)
         for y in range(1, H - 1):
             for x in range(1, W - 1):
                 # print(np.median(np.array(channel[y-1:y+2, x-1:x+2])).astype(np.uint8))
-                filtered_channel[y, x] = np.median(np.array(channel[y-1:y+2, x-1:x+2])).astype(np.uint8)
+                filtered_channel[y, x] = np.median(np.array(channel[y-1:y+2, x-1:x+2])).astype(np.float32)
         filtered_channels.append(filtered_channel)
 
     return filtered_channels

@@ -39,15 +39,6 @@ def main():
     # image.show()
     image.save(name+".png", "PNG")
 
-    opencv_equalized_channels = utils.opencv_equalizer(channels)
-
-    # after opencv equalizer
-    plt.bar(range(256), Image.fromarray(opencv_equalized_channels[1]).histogram())
-    plt.show()
-
-    opencv_equalized_image = utils.channels_to_image(opencv_equalized_channels)
-    opencv_equalized_image.show()
-
     # before equalizer
     plt.bar(range(256), Image.fromarray(channels[1]).histogram())
     plt.show()
@@ -59,7 +50,7 @@ def main():
     plt.show()
 
     name += "_equalizer"
-    channels = utils.channels_to_image(channels)
+    image = utils.channels_to_image(channels)
     image.show()
 
 main()

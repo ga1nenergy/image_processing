@@ -19,9 +19,7 @@ def gray_world(channels):
     beta = main_channel_avg / G_avg
     gamma = main_channel_avg / B_avg
 
-    return [(alpha*channels[0]).astype(np.uint8),
-            (beta*channels[1]).astype(np.uint8),
-            (gamma*channels[2]).astype(np.uint8)]
+    return [alpha * channels[0], beta * channels[1], gamma * channels[2]]
 
 
 def white_patch(channels):

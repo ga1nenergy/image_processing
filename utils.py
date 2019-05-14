@@ -2,15 +2,18 @@ import numpy as np
 import cv2 as cv
 from PIL import Image
 
+PROCESSING_TYPE = np.float16
+FINAL_TYPE = np.uint8
+
 
 def conv(kernel, matrix):
     return np.sum(np.multiply(kernel, matrix))
 
 
 def channels_to_image(channels):
-    channels_image = (Image.fromarray(channels[0]),
-                      Image.fromarray(channels[1]),
-                      Image.fromarray(channels[2]))
+    channels_image = (Image.fromarray(channels[0].astype(np.uint8)),
+                      Image.fromarray(channels[1].astype(np.uint8)),
+                      Image.fromarray(channels[2].astype(np.uint8)))
 
     new_image = Image.merge("RGB", channels_image)
     return new_image
