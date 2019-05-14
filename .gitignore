@@ -1,4 +1,5 @@
 # Imgaes
+*.png
 obr/
 
 # PyCharm stuff
