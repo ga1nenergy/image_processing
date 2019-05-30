@@ -10,20 +10,20 @@ from gamma_correction import gamma_correction
 import utils
 import jpeg_codec
 
-pil_image = Image.open('example_very_tiny.tiff')
+pil_image = Image.open('example_cut.tiff')
 bayer_image = np.array(pil_image)
 
 
 def test_sample():
-    image = np.array(Image.open('sample.png'))
-    size = 32
-    channels = [image[:size, :size, 0],
-                image[:size, :size, 1],
-                image[:size, :size, 2]]
-    utils.channels_to_image(channels).show()
-    jpeg = jpeg_codec.image2jpeg(channels, "foo")
+    image = np.array(Image.open('cut.png'))
+    channels = [image[:, :, 0],
+                image[:, :, 1],
+                image[:, :, 2]]
+    # utils.channels_to_image(channels).show()
+    jpeg = jpeg_codec.image2jpeg(channels, "foo", quality=10)
     de_jpeg = jpeg_codec.jpeg2image("foo")
-    utils.channels_to_image(de_jpeg).show()
+    jpeg_image = utils.channels_to_image(de_jpeg)
+    jpeg_image.save("jpeg_cut.png", "PNG")
 
 
 def snake_tester():
@@ -41,11 +41,6 @@ def main():
     # Debayering
     channels = debayer(bayer_image)
     name = "debayer"
-
-    utils.channels_to_image(channels).show()
-    jpeg_debayer = jpeg_codec.image2jpeg(channels, "some_file.json")
-    de_jpeg = jpeg_codec.jpeg2image(jpeg_debayer)
-    utils.channels_to_image(de_jpeg).show()
 
     image = utils.channels_to_image(channels)
     # debayered_image.show()
@@ -83,9 +78,16 @@ def main():
 
     name += "_equalizer"
     image = utils.channels_to_image(channels)
+    image.save(name+".png", "PNG")
     image.show()
+
+    jpeg_codec.image2jpeg(channels, "jpeg_file.json", quality=5)
+    de_jpeg = jpeg_codec.jpeg2image("jpeg_file.json")
+    name += "_jpeg"
+    image = utils.channels_to_image(de_jpeg)
+    image.show()
+
     image.save(name+".png", "PNG")
 
-test_sample()
 # snake_tester()
 main()
