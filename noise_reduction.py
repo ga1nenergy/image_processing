@@ -20,6 +20,7 @@ def median_filter(channels):
 def gaussian_filter(channels):
     [H, W] = channels[0].shape
     R = 1
+    var = 3
 
     filtered_channels = []
 
@@ -27,8 +28,6 @@ def gaussian_filter(channels):
         filtered_channel = np.zeros(channel.shape, dtype=PROCESSING_TYPE)
         for y in range(1, H - 1):
             for x in range(1, W - 1):
-                window = channel[y-R:y+R+1, x-R:x+R+1]
-                var = channel[y-R:y+R+1, x-R:x+R+1].var()
                 z = 0
 
                 for i in range(y-R, y+R):
@@ -46,6 +45,7 @@ def gaussian_filter(channels):
 def bilateral_filter(channels):
     [H, W] = channels[0].shape
     R = 1
+    var = 3
 
     filtered_channels = []
 
@@ -53,8 +53,6 @@ def bilateral_filter(channels):
         filtered_channel = np.zeros(channel.shape, dtype=np.uint8)
         for y in range(1, H - 1):
             for x in range(1, W - 1):
-                window = channel[y-R:y+R+1, x-R:x+R+1]
-                var = channel[y-R:y+R+1, x-R:x+R+1].var()
                 z = 0
 
                 for i in range(y-R, y+R):

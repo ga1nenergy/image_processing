@@ -102,12 +102,16 @@ def image2jpeg(channels, filename, quality=0):
         H, W = image.shape
 
         if H % 8 != 0 or W % 8 != 0:
-            image = np.resize(image, (H + 8 - H % 8, W + 8 - W % 8))
+            # image = np.resize(image, (H + 8 - H % 8, W + 8 - W % 8))
+            image = np.vstack((image, np.zeros((8 - H % 8, W))))
+            image = np.hstack((image, np.zeros((image.shape[0], 8 - W % 8))))
             H, W = image.shape
 
         Q = quantization_matrix(quality)
 
         jpeg_channel = []
+
+        channel_distribution = np.zeros((1,256))
 
         for y in range(0, H - 8 + 1, 8):
             for x in range(0, W - 8 + 1, 8):
@@ -126,8 +130,6 @@ def image2jpeg(channels, filename, quality=0):
 
     with open(filename, "w") as file:
         json.dump(res, file)
-
-    return res
 
 
 def jpeg2image(filename):
@@ -151,19 +153,19 @@ def jpeg2image(filename):
     for jpeg_channel in jpeg_channels:
         x = 0
         y = 0
-        channel = np.zeros((H, W), dtype=utils.PROCESSING_TYPE)
+        channel = np.zeros((H, W), dtype=int)
         for jpeg_rle_array in jpeg_channel:
             jpeg_snake = de_rle(jpeg_rle_array)
             quantized_dct_block = de_snake(jpeg_snake)
             dct_block = np.multiply(quantized_dct_block, Q)
-            block = cv2.dct(dct_block, flags=cv2.DCT_INVERSE)
-            channel[y:y + 8, x:x + 8] = block
+            block = np.clip(cv2.dct(dct_block, flags=cv2.DCT_INVERSE), 0, 255)
+            channel[y:y + 8, x:x + 8] = block.astype(int)
 
             x += 8
             if x == W:
                 x = 0
                 y += 8
 
-        channels.append(np.resize(channel, (true_H, true_W)))
+        channels.append(channel[:true_H, :true_W])
 
     return channels

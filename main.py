@@ -10,7 +10,7 @@ from gamma_correction import gamma_correction
 import utils
 import jpeg_codec
 
-pil_image = Image.open('example_cut.tiff')
+pil_image = Image.open('example_tiny.tiff')
 bayer_image = np.array(pil_image)
 
 
@@ -20,7 +20,7 @@ def test_sample():
                 image[:, :, 1],
                 image[:, :, 2]]
     # utils.channels_to_image(channels).show()
-    jpeg = jpeg_codec.image2jpeg(channels, "foo", quality=10)
+    jpeg = jpeg_codec.image2jpeg(channels, "foo", quality=0)
     de_jpeg = jpeg_codec.jpeg2image("foo")
     jpeg_image = utils.channels_to_image(de_jpeg)
     jpeg_image.save("jpeg_cut.png", "PNG")
@@ -81,13 +81,19 @@ def main():
     image.save(name+".png", "PNG")
     image.show()
 
-    jpeg_codec.image2jpeg(channels, "jpeg_file.json", quality=5)
+    jpeg_codec.image2jpeg(channels, "jpeg_file.json", quality=20)
     de_jpeg = jpeg_codec.jpeg2image("jpeg_file.json")
     name += "_jpeg"
     image = utils.channels_to_image(de_jpeg)
     image.show()
 
     image.save(name+".png", "PNG")
+
+    channels = [channel.astype(int) for channel in channels]
+    de_jpeg = [channel[1:-1, 1:-1] for channel in channels]
+
+    print("Original entropy: {0}".format(utils.calc_entropy(channels)))
+    print("JPEG entropy: {0}".format(utils.calc_entropy(de_jpeg)))
 
 # snake_tester()
 main()

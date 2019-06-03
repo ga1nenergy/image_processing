@@ -1,5 +1,6 @@
 import numpy as np
 import cv2 as cv
+import utils
 from PIL import Image
 
 PROCESSING_TYPE = np.float32
@@ -28,3 +29,26 @@ def opencv_equalizer(channels):
         equalized_channels.append(np.matrix(equalized_channel*255, dtype=np.uint8))
 
     return equalized_channels
+
+
+def calc_entropy(channels):
+    distrib = np.zeros((3, 256), dtype=float)
+
+    H, W = channels[0].shape
+    for y in range(H):
+        for x in range(W):
+            distrib[0, channels[0][y, x]] += 1
+            distrib[1, channels[1][y, x]] += 1
+            distrib[2, channels[2][y, x]] += 1
+
+    distrib = np.divide(distrib, H * W)
+
+    idx_i, idx_j = np.nonzero(distrib)
+    idx = tuple(zip(idx_i, idx_j))
+
+    entropy = np.zeros(3)
+    for i in idx:
+        entropy[i[0]] += -distrib[i] * np.log(distrib[i]) / np.log(256)
+
+    return entropy
+
