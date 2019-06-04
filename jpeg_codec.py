@@ -111,8 +111,6 @@ def image2jpeg(channels, filename, quality=0):
 
         jpeg_channel = []
 
-        channel_distribution = np.zeros((1,256))
-
         for y in range(0, H - 8 + 1, 8):
             for x in range(0, W - 8 + 1, 8):
                 block = image[y:y+8, x:x+8]
